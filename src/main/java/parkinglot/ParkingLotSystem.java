@@ -6,16 +6,21 @@ import java.util.List;
 public class ParkingLotSystem {
 
     private final int capacity;
-    private ParkingLotOwner owner;
     List<Object> listOfVehicle = new ArrayList<>();
+    List<ParkingLotInformation> listOfObserver = new ArrayList<>();
 
     public ParkingLotSystem(int capacity) {
         this.capacity = capacity;
     }
 
     public Boolean parkVehicle(Object vehicle) throws ParkingLotException {
-        if(isParkFull())
+        if(isParkFull()) {
+            for (ParkingLotInformation observer: listOfObserver
+                 ) {
+                observer.inform(true);
+            }
             throw new ParkingLotException("Parking is full");
+        }
         listOfVehicle.add(vehicle);
         return true;
     }
@@ -24,6 +29,12 @@ public class ParkingLotSystem {
         if(listOfVehicle.size() == 0)
             throw new ParkingLotException("Parking is Empty");
         if(listOfVehicle.contains(vehicle)){
+            if(isParkFull()){
+                for (ParkingLotInformation observer: listOfObserver
+                ) {
+                    observer.inform(false);
+                }
+            }
             listOfVehicle.remove(vehicle);
             return true;
         }
@@ -36,9 +47,11 @@ public class ParkingLotSystem {
         return false;
     }
 
-    public Boolean informOwner(ParkingLotOwner owner) {
-        this.owner = owner;
-        return owner.inform(isParkFull());
+    public void generateOwner(List<ParkingLotInformation> listOfObserver) {
+        for (ParkingLotInformation observer:listOfObserver
+             ) {
+            this.listOfObserver.add(observer);
+        }
     }
 
 }
