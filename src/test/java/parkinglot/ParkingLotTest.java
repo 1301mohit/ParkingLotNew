@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -14,7 +15,7 @@ import static org.mockito.Mockito.when;
 
 public class ParkingLotTest {
 
-    ParkingLotSystem parkingLotSystem = null;
+    ParkingLotSystem parkingLotSystem;
     Object vehicle = null;
     Object vehicle1 = null;
     Object vehicle2 = null;
@@ -25,7 +26,7 @@ public class ParkingLotTest {
         listOfObserver = new ArrayList<>();
         listOfObserver.add(new ParkingLotOwner());
         listOfObserver.add(new AirportSecurity());
-        parkingLotSystem = new ParkingLotSystem(10);
+        parkingLotSystem = new ParkingLotSystem(2);
         vehicle = new Object();
         vehicle1 = new Object();
         vehicle2 = new Object();
@@ -71,53 +72,65 @@ public class ParkingLotTest {
             parkingLotSystem.parkVehicle(vehicle1);
             Boolean isUnPark = parkingLotSystem.unParkVehicle(vehicle);
         } catch (ParkingLotException e) {
-           Assert.assertEquals("Vehicle is not present", e.getMessage());
+            Assert.assertEquals("Vehicle is not present", e.getMessage());
         }
     }
 
     @Test
     public void informObserver_IsFull_ReturnException() {
-        try{
+        try {
             parkingLotSystem.parkVehicle(vehicle);
             parkingLotSystem.parkVehicle(vehicle1);
             parkingLotSystem.parkVehicle(vehicle2);
-        } catch(ParkingLotException e){
+        } catch (ParkingLotException e) {
             Assert.assertEquals("Parking is full", e.getMessage());
         }
     }
 
     @Test
     public void WhenFull_InformObservers_IsFull() {
-        try{
+        try {
             parkingLotSystem.parkVehicle(vehicle);
             parkingLotSystem.parkVehicle(vehicle1);
             parkingLotSystem.parkVehicle(vehicle2);
-        } catch(ParkingLotException e){
+        } catch (ParkingLotException e) {
             Assert.assertEquals("Parking is full", e.getMessage());
         }
     }
 
     @Test
     public void WhenFull_UnparkVehicle_InformObserver_IsNotFull() {
-        try{
+        try {
             parkingLotSystem.generateOwner(listOfObserver);
             parkingLotSystem.parkVehicle(vehicle);
             parkingLotSystem.parkVehicle(vehicle1);
             parkingLotSystem.unParkVehicle(vehicle);
             Assert.assertFalse(listOfObserver.get(0).isFull && listOfObserver.get(1).isFull);
-        } catch(ParkingLotException e) {}
+        } catch (ParkingLotException e) {
+        }
     }
 
     @Test
-    public void ownerSendsPosition_ToParkCar_ParksCarAtPosition() {
-        try{
-            ParkingLotOwner owner = mock(ParkingLotOwner.class);
-            parkingLotSystem.setOwner(owner);
-            when(owner.getPositionToPark(parkingLotSystem.vehicleMap.keySet().stream().collect(Collectors.toList())))
-                    .thenReturn(4);
+    public void parkVehicle_mockingPosition_ReturnPositionSame() {
+        try {
             parkingLotSystem.parkVehicle(vehicle);
-            Assert.assertEquals(vehicle,parkingLotSystem.vehicleMap.get(4));
-        } catch(ParkingLotException e) {}
+            Integer position = parkingLotSystem.findPosition(vehicle);
+            Assert.assertEquals(this.parkingLotSystem.position, position);
+        } catch (ParkingLotException e) {
+            e.printStackTrace();
+        }
     }
+
+    @Test
+    public void parkedVehicleDate_ReturnDateSame() {
+        try {
+            parkingLotSystem.parkVehicle(vehicle);
+            Date date = parkingLotSystem.getDate(vehicle);
+            Assert.assertEquals(parkingLotSystem.date, date);
+        } catch (ParkingLotException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
 
