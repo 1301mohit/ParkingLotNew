@@ -1,6 +1,5 @@
 package parkinglot;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 public class ParkingLotSystem {
@@ -13,14 +12,6 @@ public class ParkingLotSystem {
     Date date;
     Integer position;
     public ParkingLotOwner owner;
-
-    public void setOwner(ParkingLotOwner owner) {
-        this.owner = owner;
-    }
-
-    public void setVehicleMap(Map<Integer, Object> vehicleMap) {
-        this.vehicleMap = vehicleMap;
-    }
 
     public ParkingLotSystem(int capacity) {
         this.capacity = capacity;
@@ -57,7 +48,6 @@ public class ParkingLotSystem {
         Random random = new Random();
         int index = random.nextInt(listOfPosition.size());
         position = listOfPosition.get(index);
-        // position = this.owner.getPositionToPark(listOfPosition);
         return position;
     }
 
@@ -92,13 +82,10 @@ public class ParkingLotSystem {
         ) {
             this.listOfObserver.add(observer);
         }
-        setOwner((ParkingLotOwner) listOfObserver.get(0));
     }
 
     public Date getDate(Object vehicle) {
         Integer key = findPosition(vehicle);
-//        Integer key = this.vehicleMap.entrySet().stream()
-//                .filter(v -> v.getValue() == (vehicle)).map(Map.Entry::getKey).findFirst().get();
         this.date = this.timeOfVehicleMap.get(key);
         return this.date;
     }
@@ -106,21 +93,5 @@ public class ParkingLotSystem {
     public Integer findPosition(Object vehicle) {
         return this.vehicleMap.entrySet().stream().filter(v -> v.getValue() == vehicle).map(Map.Entry::getKey).findFirst().get();
     }
-
-
-//    public Integer findPosition(Object vehicle) throws ParkingLotException {
-//        System.out.println("dfvfdvfkdj");
-//        for (int key: vehicleMap.keySet()) {
-//            if(vehicleMap.get(key) == vehicle)
-//                return key;
-//        }
-//        throw new ParkingLotException("Vehicle is not present");
-//    }
-
-//    public Date getDate(Object vehicle) throws ParkingLotException {
-//        Integer key = getPosition(vehicle);
-//        System.out.println(".........."+this.timeOfVehicleMap.get(key));
-//        return this.timeOfVehicleMap.get(key);
-//    }
 
 }
