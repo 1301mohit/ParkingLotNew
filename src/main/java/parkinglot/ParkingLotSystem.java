@@ -12,11 +12,15 @@ public class ParkingLotSystem {
     List<ParkingLotInformation> listOfObserver = new ArrayList<>();
     List listOfPosition = new ArrayList();
     Integer position;
-    private ParkingLotOwner owner;
+    public ParkingLotOwner owner;
+
+    public void setOwner(ParkingLotOwner owner) {
+        this.owner = owner;
+    }
 
     public ParkingLotSystem(int capacity) {
         this.capacity = capacity;
-        for(int i=1; i<this.capacity; i++) {
+        for(int i=1; i<=this.capacity; i++) {
             vehicleMap.put(i,null);
         }
     }
@@ -42,7 +46,7 @@ public class ParkingLotSystem {
             if (vehicleMap.get(null) == null)
                 listOfPosition.add(key);
         }
-        position = this.owner.nullPositionList(listOfPosition);
+        position = this.owner.getPositionToPark(listOfPosition);
         return position;
     }
 
@@ -76,8 +80,7 @@ public class ParkingLotSystem {
              ) {
             this.listOfObserver.add(observer);
         }
-        this.owner = (ParkingLotOwner) listOfObserver.get(0);
-
+        setOwner( (ParkingLotOwner) listOfObserver.get(0));
     }
 
 }

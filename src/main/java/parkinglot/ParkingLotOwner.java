@@ -11,9 +11,9 @@ public class ParkingLotOwner extends ParkingLotInformation{
         parkingAttendent.parkVehicle(position, vehicle);
     }
 
-    public Integer nullPositionList(List<Integer> listOfPosition) {
+    public Integer getPositionToPark(List<Integer> listOfPosition) {
         Random random = new Random();
-        Integer index = random.nextInt(listOfPosition.size());
+        int index = random.nextInt(listOfPosition.size());
         return listOfPosition.get(index);
     }
 
