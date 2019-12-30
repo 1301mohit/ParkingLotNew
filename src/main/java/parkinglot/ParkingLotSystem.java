@@ -1,16 +1,16 @@
 package parkinglot;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
 
 public class ParkingLotSystem {
 
     private Integer capacity;
     Map<Integer, Object> vehicleMap = new HashMap<>();
+    Map<Integer, Date> timeOfVehicleMap = new HashMap<>();
     List<ParkingLotInformation> listOfObserver = new ArrayList<>();
-    List listOfPosition = new ArrayList();
+    List<Integer> listOfPosition = new ArrayList();
+    Date date;
     Integer position;
     public ParkingLotOwner owner;
 
@@ -18,69 +18,109 @@ public class ParkingLotSystem {
         this.owner = owner;
     }
 
+    public void setVehicleMap(Map<Integer, Object> vehicleMap) {
+        this.vehicleMap = vehicleMap;
+    }
+
     public ParkingLotSystem(int capacity) {
         this.capacity = capacity;
-        for(int i=1; i<=this.capacity; i++) {
-            vehicleMap.put(i,null);
+        for (int i = 1; i <= this.capacity; i++) {
+            vehicleMap.put(i, null);
+            timeOfVehicleMap.put(i, new Date());
         }
     }
 
-    public ParkingLotSystem() {}
+    public ParkingLotSystem() {
+    }
 
     public Boolean parkVehicle(Object vehicle) throws ParkingLotException {
-        position = getPositionFromOwner();
-        if(isParkFull()) {
-            for (ParkingLotInformation observer: listOfObserver
-                 ) {
+        position = getPosition();
+        if (isParkFull()) {
+            for (ParkingLotInformation observer : listOfObserver
+            ) {
                 observer.inform(true);
             }
             throw new ParkingLotException("Parking is full");
         }
         vehicleMap.replace(position, null, vehicle);
+        this.date = new Date();
+        timeOfVehicleMap.replace(position, null, date);
         return true;
     }
 
-    private Integer getPositionFromOwner() {
-        for (Integer key : vehicleMap.keySet()
+    public Integer getPosition() {
+        for (int key : vehicleMap.keySet()
         ) {
             if (vehicleMap.get(null) == null)
                 listOfPosition.add(key);
         }
-        position = this.owner.getPositionToPark(listOfPosition);
+        Random random = new Random();
+        int index = random.nextInt(listOfPosition.size());
+        position = listOfPosition.get(index);
+        // position = this.owner.getPositionToPark(listOfPosition);
         return position;
     }
 
     public Boolean unParkVehicle(Object vehicle) throws ParkingLotException {
         Integer vehicle_Key = null;
-        if(vehicleMap.size() == 0)
+        if (vehicleMap.size() == 0)
             throw new ParkingLotException("Parking is Empty");
-        for (Integer key: vehicleMap.keySet()) {
-            if ( vehicleMap.get(key).equals(vehicle)){
+        for (Integer key : vehicleMap.keySet()) {
+            if (vehicleMap.get(key) == vehicle) {
                 vehicle_Key = key;
             }
         }
-        if( vehicle_Key == null) throw new ParkingLotException("Vehicle is not present");
-        if(isParkFull()){
-            for (ParkingLotInformation observer: listOfObserver) {
+        if (vehicle_Key == null) throw new ParkingLotException("Vehicle is not present");
+        if (isParkFull()) {
+            for (ParkingLotInformation observer : listOfObserver) {
                 observer.inform(false);
             }
         }
         vehicleMap.replace(vehicle_Key, vehicle, null);
+        timeOfVehicleMap.replace(vehicle_Key, null);
         return true;
     }
 
-    public Boolean isParkFull(){
-        if(!this.vehicleMap.values().contains(null))
+    public Boolean isParkFull() {
+        if (!this.vehicleMap.values().contains(null))
             return true;
         return false;
     }
 
     public void generateOwner(List<ParkingLotInformation> listOfObserver) {
-        for (ParkingLotInformation observer:listOfObserver
-             ) {
+        for (ParkingLotInformation observer : listOfObserver
+        ) {
             this.listOfObserver.add(observer);
         }
-        setOwner( (ParkingLotOwner) listOfObserver.get(0));
+        setOwner((ParkingLotOwner) listOfObserver.get(0));
     }
+
+    public Date getDate(Object vehicle) {
+        Integer key = findPosition(vehicle);
+//        Integer key = this.vehicleMap.entrySet().stream()
+//                .filter(v -> v.getValue() == (vehicle)).map(Map.Entry::getKey).findFirst().get();
+        this.date = this.timeOfVehicleMap.get(key);
+        return this.date;
+    }
+
+    public Integer findPosition(Object vehicle) {
+        return this.vehicleMap.entrySet().stream().filter(v -> v.getValue() == vehicle).map(Map.Entry::getKey).findFirst().get();
+    }
+
+
+//    public Integer findPosition(Object vehicle) throws ParkingLotException {
+//        System.out.println("dfvfdvfkdj");
+//        for (int key: vehicleMap.keySet()) {
+//            if(vehicleMap.get(key) == vehicle)
+//                return key;
+//        }
+//        throw new ParkingLotException("Vehicle is not present");
+//    }
+
+//    public Date getDate(Object vehicle) throws ParkingLotException {
+//        Integer key = getPosition(vehicle);
+//        System.out.println(".........."+this.timeOfVehicleMap.get(key));
+//        return this.timeOfVehicleMap.get(key);
+//    }
 
 }
