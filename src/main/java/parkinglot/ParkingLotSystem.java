@@ -53,7 +53,7 @@ public class ParkingLotSystem {
 
     public Boolean unParkVehicle(Object vehicle) throws ParkingLotException {
         Integer vehicle_Key = null;
-        if (vehicleMap.size() == 0)
+        if (vehicleMap.values().stream().filter(v -> v == null).count() == vehicleMap.size())
             throw new ParkingLotException("Parking is Empty");
         for (Integer key : vehicleMap.keySet()) {
             if (vehicleMap.get(key) == vehicle) {

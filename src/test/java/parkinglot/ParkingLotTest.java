@@ -72,18 +72,16 @@ public class ParkingLotTest {
     }
 
     @Test
-    public void informObserver_IsFull_ReturnException() {
-        try {
-            parkingLotSystem.parkVehicle(vehicle);
-            parkingLotSystem.parkVehicle(vehicle1);
-            parkingLotSystem.parkVehicle(vehicle2);
-        } catch (ParkingLotException e) {
-            Assert.assertEquals("Parking is full", e.getMessage());
+    public void unParkVehicle_IfNoVehiclePresent_ShouldThrowException() {
+        try{
+            parkingLotSystem.unParkVehicle(vehicle);
+        } catch(ParkingLotException e) {
+            Assert.assertEquals("Parking is Empty", e.getMessage());
         }
     }
 
     @Test
-    public void WhenFull_InformObservers_IsFull() {
+    public void informObserver_IsFull_ReturnException() {
         try {
             parkingLotSystem.parkVehicle(vehicle);
             parkingLotSystem.parkVehicle(vehicle1);
