@@ -32,6 +32,7 @@ public class ParkingLot {
     }
 
     public List<Integer> getListOfUnoccupiedPosition() {
+        listOfUnoccupiedPosition.clear();
         for (int key : vehicleMap.keySet()) {
             if (vehicleMap.get(key).getVehicle() == null)
                 listOfUnoccupiedPosition.add(key);
