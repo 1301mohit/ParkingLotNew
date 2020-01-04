@@ -11,10 +11,10 @@ import java.util.List;
 public class ParkingLotTest {
 
     ParkingLot parkingLot;
-    Object vehicle = null;
-    Object vehicle1 = null;
-    Object vehicle2 = null;
-    List<ParkingLotInformation> listOfObserver = null;
+    Object vehicle;
+    Object vehicle1;
+    Object vehicle2;
+    List<ParkingLotInformation> listOfObserver;
 
     @Before
     public void setUp() {
@@ -41,14 +41,13 @@ public class ParkingLotTest {
     }
 
     @Test
-    public void parkMoreThanCapacity_ShouldReturnException() {
+    public void parkMoreThanCapacity_ShouldReturnFalse() {
         try {
-            Boolean isPark1 = parkingLot.parkVehicle(vehicle, 1);
-            Boolean isPark2 = parkingLot.parkVehicle(vehicle1, 2);
+            parkingLot.parkVehicle(vehicle, 1);
+            parkingLot.parkVehicle(vehicle1, 2);
             Boolean isPark3 = parkingLot.parkVehicle(vehicle2, 3);
-        } catch (ParkingLotException e) {
-            Assert.assertEquals("Parking is full", e.getMessage());
-        }
+            Assert.assertFalse(isPark3);
+        } catch (ParkingLotException e) { }
     }
 
     @Test
@@ -64,22 +63,12 @@ public class ParkingLotTest {
     }
 
     @Test
-    public void unParkVehicle_VehicleIsNotPresent_ShouldThrowException() {
+    public void unParkVehicle_VehicleIsNotPresent_ShouldReturnFalse() {
         try {
             parkingLot.parkVehicle(vehicle1, 1);
             Boolean isUnPark = parkingLot.unParkVehicle(vehicle);
-        } catch (ParkingLotException e) {
-            Assert.assertEquals("Vehicle is not present", e.getMessage());
-        }
-    }
-
-    @Test
-    public void unParkVehicle_IfNoVehiclePresent_ShouldThrowException() {
-        try{
-            parkingLot.unParkVehicle(vehicle);
-        } catch(ParkingLotException e) {
-            Assert.assertEquals("Parking is Empty", e.getMessage());
-        }
+            Assert.assertFalse(isUnPark);
+        } catch (ParkingLotException e) { }
     }
 
     @Test
@@ -89,7 +78,7 @@ public class ParkingLotTest {
             parkingLot.parkVehicle(vehicle1, 2);
             parkingLot.parkVehicle(vehicle2, 3);
         } catch (ParkingLotException e) {
-            Assert.assertEquals("Parking is full", e.getMessage());
+            Assert.assertEquals(ParkingLotException.ExceptionType.FULL, e.type);
         }
     }
 
@@ -111,9 +100,7 @@ public class ParkingLotTest {
             parkingLot.parkVehicle(vehicle, 1);
             int position = parkingLot.findPosition(vehicle);
             Assert.assertEquals(1, position);
-        } catch (ParkingLotException e) {
-            e.printStackTrace();
-        }
+        } catch (ParkingLotException e) { }
     }
 
     @Test
@@ -122,9 +109,7 @@ public class ParkingLotTest {
             parkingLot.parkVehicle(vehicle, 1);
             Date date = parkingLot.getDate(vehicle);
             Assert.assertEquals(parkingLot.date, date);
-        } catch (ParkingLotException e) {
-            e.printStackTrace();
-        }
+        } catch (ParkingLotException e) { }
     }
 
 }
