@@ -1,29 +1,26 @@
 package parkinglot;
 
 import java.util.*;
+import java.util.stream.IntStream;
 
 public class ParkingLot {
 
-    private Integer capacity;
+    Integer capacity;
     Map<Integer, ParkingSlot> vehicleMap = new HashMap<>();
     List<ParkingLotInformation> listOfObserver = new ArrayList<>();
-    List<Integer> listOfUnoccupiedPosition = new ArrayList();
     Date date;
+
+    public ParkingLot() {}
 
     public ParkingLot(int capacity) {
         this.capacity = capacity;
-        for (int i = 1; i <= this.capacity; i++) {
-            vehicleMap.put(i, new ParkingSlot());
-        }
+        IntStream.range(1, capacity+1).forEach(position -> vehicleMap.put(position, new ParkingSlot()));
     }
 
     public Boolean parkVehicle(Object vehicle, Integer position) throws ParkingLotException {
         if (isParkFull()) {
-            for (ParkingLotInformation observer : listOfObserver
-            ) {
-                observer.inform(true);
-            }
-            throw new ParkingLotException("Parking is full");
+            listOfObserver.stream().forEach(observer -> observer.inform(true));
+            return false;
         }
         this.date = new Date();
         vehicleMap.get(position).setVehicle(vehicle);
@@ -32,23 +29,21 @@ public class ParkingLot {
     }
 
     public List<Integer> getListOfUnoccupiedPosition() {
-        listOfUnoccupiedPosition.clear();
-        for (int key : vehicleMap.keySet()) {
-            if (vehicleMap.get(key).getVehicle() == null)
+        List<Integer> listOfUnoccupiedPosition = new ArrayList();
+        vehicleMap.keySet().stream().forEach(key -> {
+            if(vehicleMap.get(key).getVehicle() == null)
                 listOfUnoccupiedPosition.add(key);
-        }
+        });
         return listOfUnoccupiedPosition;
     }
 
     public Boolean unParkVehicle(Object vehicle) throws ParkingLotException {
         Integer vehiclePosition = null;
-        if (vehicleMap.values().stream().filter(v -> v.getVehicle() == null).count() == vehicleMap.size())
-            throw new ParkingLotException("Parking is Empty");
         vehiclePosition = findPosition(vehicle);
+        if(vehiclePosition == 0)
+            return false;
         if (isParkFull()) {
-            for (ParkingLotInformation observer : listOfObserver) {
-                observer.inform(false);
-            }
+            listOfObserver.stream().forEach(observer -> observer.inform(false));
         }
         vehicleMap.get(vehiclePosition).setVehicle(null);
         vehicleMap.get(vehiclePosition).setDateAndTime(null);
@@ -62,10 +57,7 @@ public class ParkingLot {
     }
 
     public void generateOwner(List<ParkingLotInformation> listOfObserver) {
-        for (ParkingLotInformation observer : listOfObserver
-        ) {
-            this.listOfObserver.add(observer);
-        }
+        this.listOfObserver.addAll(listOfObserver);
     }
 
     public Date getDate(Object vehicle) throws ParkingLotException {
@@ -83,7 +75,7 @@ public class ParkingLot {
                     .map(Map.Entry::getKey).findFirst().get();
         }
         catch(NoSuchElementException e){
-            throw new ParkingLotException("Vehicle is not present");
+            return 0;
         }
     }
 

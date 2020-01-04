@@ -7,6 +7,7 @@ public class ParkingLotSystem {
 
     Integer capacity;
     List<ParkingLot> listOfParkingLots = new ArrayList<>();
+    ParkingLotStrategy strategy;
 
     public ParkingLotSystem(int capacity, List<Integer> listOfParkingLotCapacity){
         this.capacity = capacity;
@@ -19,37 +20,28 @@ public class ParkingLotSystem {
     }
 
     public Boolean parkVehicle(Object vehicle, DriverType typeOfDriver) throws ParkingLotException {
-        try{
-            List<Integer> listOfSizeOfOccupiedVehicleParkingLot = getListOfSizeOfUnoccupiedVehicleParkingLot();
-            Integer minimumSize = listOfSizeOfOccupiedVehicleParkingLot.get(0);
-            int index = 0;
-            if(typeOfDriver == DriverType.NORMAL){
-                for(int i=0; i<listOfSizeOfOccupiedVehicleParkingLot.size(); i++){
-                    if(minimumSize > listOfSizeOfOccupiedVehicleParkingLot.get(i)){
-                        minimumSize = listOfSizeOfOccupiedVehicleParkingLot.get(i);
-                        index = i;
-                    }
-                }
-            }
-            List<Integer> listOfUnoccupiedVehiclePosition = listOfParkingLots.get(index).getListOfUnoccupiedPosition();
-            while(listOfUnoccupiedVehiclePosition.size() == 0 && index < this.capacity){
-                index++;
-                listOfUnoccupiedVehiclePosition = listOfParkingLots.get(index).getListOfUnoccupiedPosition();
-            }
-            return listOfParkingLots.get(index).parkVehicle(vehicle,listOfUnoccupiedVehiclePosition.get(0));
-        }catch(IndexOutOfBoundsException e){
-            throw new ParkingLotException("ParkingLotSystem is full");
-        }
-
+        strategy = FactoryForStrategy.getStrategyObject(typeOfDriver);
+        return strategy.parkVehicle(vehicle, typeOfDriver, this.listOfParkingLots);
     }
 
-    public List<Integer> getListOfSizeOfUnoccupiedVehicleParkingLot() {
-        List<Integer> listOfSizeOfOccupiedVehicleParkingLot = new ArrayList<>();
+    public Boolean unParkVehicle(Object vehicle) throws ParkingLotException {
         for(int i=0; i<this.capacity; i++){
-            Integer sizeOfOccupiedVehicle = (int)listOfParkingLots.get(i).vehicleMap.values().stream().filter(v -> v.getVehicle() != null).count();
-            listOfSizeOfOccupiedVehicleParkingLot.add(i, sizeOfOccupiedVehicle);
+            Boolean check = listOfParkingLots.get(i).unParkVehicle(vehicle);
+            if(check)
+                return true;
         }
-        return listOfSizeOfOccupiedVehicleParkingLot;
+        throw new ParkingLotException("Vehicle is not Present", ParkingLotException.ExceptionType.NOT_PRESENT);
+    }
+
+    public Boolean isEvenlyDistributed(){
+        List<Integer> listOfCount_Cars = new ArrayList<>();
+        listOfCount_Cars.addAll(strategy.getListOfSizeOfOccupiedVehicleParkingLot(listOfParkingLots));
+        Integer value = listOfCount_Cars.get(0);
+        for(int i=1; i<listOfCount_Cars.size(); i++){
+            if(value != listOfCount_Cars.get(i))
+                return false;
+        }
+        return true;
     }
 
 }
