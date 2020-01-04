@@ -19,8 +19,8 @@ public class ParkingLotSystem {
         return this.listOfParkingLots.size();
     }
 
-    public Boolean parkVehicle(Object vehicle, DriverType typeOfDriver) throws ParkingLotException {
-        strategy = FactoryForStrategy.getStrategyObject(typeOfDriver);
+    public Boolean parkVehicle(Vehicle vehicle, DriverType typeOfDriver) throws ParkingLotException {
+        strategy = FactoryForStrategy.getStrategyObject(typeOfDriver, vehicle.vehicleType);
         return strategy.parkVehicle(vehicle, typeOfDriver, this.listOfParkingLots);
     }
 

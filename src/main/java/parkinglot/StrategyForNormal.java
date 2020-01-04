@@ -4,7 +4,7 @@ import java.util.List;
 
 public class StrategyForNormal extends ParkingLotStrategy{
 
-    public Boolean parkVehicle(Object vehicle, DriverType typeOfDriver, List<ParkingLot> listOfParkingLots) throws ParkingLotException {
+    public Boolean parkVehicle(Vehicle vehicle, DriverType typeOfDriver, List<ParkingLot> listOfParkingLots) throws ParkingLotException {
         try{
             List<Integer> listOfSizeOfOccupiedVehicleParkingLot = super.getListOfSizeOfOccupiedVehicleParkingLot(listOfParkingLots);
             Integer minimumValue = listOfSizeOfOccupiedVehicleParkingLot.get(0);

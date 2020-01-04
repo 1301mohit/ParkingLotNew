@@ -4,7 +4,7 @@ import java.util.List;
 
 public class StrategyForHandicap extends ParkingLotStrategy{
 
-    public Boolean parkVehicle(Object vehicle, DriverType typeOfDriver, List<ParkingLot> listOfParkingLots) throws ParkingLotException {
+    public Boolean parkVehicle(Vehicle vehicle, DriverType typeOfDriver, List<ParkingLot> listOfParkingLots) throws ParkingLotException {
         try{
             int index = 0;
             List<Integer> listOfUnoccupiedVehiclePosition = listOfParkingLots.get(index).getListOfUnoccupiedPosition();
