@@ -54,22 +54,24 @@ public class ParkingLotSystemTest {
             Boolean isPark4 = parkingLotSystem.parkVehicle(vehicle4, DriverType.NORMAL);
             Boolean isPark5 = parkingLotSystem.parkVehicle(vehicle5, DriverType.NORMAL);
             Assert.assertTrue(isPark && isPark1 && isPark2 && isPark3 && isPark4 && isPark5);
-        } catch(ParkingLotException e){ }
+        } catch(ParkingLotException e){
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void whenParkVehicle_MoreThanItsCapacity_ShouldReturnException() {
         try{
-            Boolean isPark = parkingLotSystem.parkVehicle(vehicle, DriverType.NORMAL);
-            Boolean isPark1 = parkingLotSystem.parkVehicle(vehicle1, DriverType.NORMAL);
-            Boolean isPark2 = parkingLotSystem.parkVehicle(vehicle2, DriverType.NORMAL);
-            Boolean isPark3 = parkingLotSystem.parkVehicle(vehicle3, DriverType.NORMAL);
-            Boolean isPark4 = parkingLotSystem.parkVehicle(vehicle4, DriverType.NORMAL);
-            Boolean isPark5 = parkingLotSystem.parkVehicle(vehicle5, DriverType.NORMAL);
-            Boolean isPark6 = parkingLotSystem.parkVehicle(vehicle6, DriverType.NORMAL);
-            Boolean isPark7 = parkingLotSystem.parkVehicle(vehicle7, DriverType.NORMAL);
+            parkingLotSystem.parkVehicle(vehicle, DriverType.NORMAL);
+            parkingLotSystem.parkVehicle(vehicle1, DriverType.NORMAL);
+            parkingLotSystem.parkVehicle(vehicle2, DriverType.NORMAL);
+            parkingLotSystem.parkVehicle(vehicle3, DriverType.NORMAL);
+            parkingLotSystem.parkVehicle(vehicle4, DriverType.NORMAL);
+            parkingLotSystem.parkVehicle(vehicle5, DriverType.NORMAL);
+            parkingLotSystem.parkVehicle(vehicle6, DriverType.NORMAL);
+            parkingLotSystem.parkVehicle(vehicle7, DriverType.NORMAL);
         } catch(ParkingLotException e){
-            Assert.assertEquals("ParkingLotSystem is full", e.getMessage());
+            Assert.assertEquals(ParkingLotException.ExceptionType.FULL, e.type);
         }
     }
 
@@ -84,6 +86,72 @@ public class ParkingLotSystemTest {
             Boolean isPark5 = parkingLotSystem.parkVehicle(vehicle5, DriverType.HANDICAP);
             Assert.assertTrue(isPark && isPark1 && isPark2 && isPark3 && isPark4 && isPark5);
         } catch(ParkingLotException e){}
+    }
+
+    @Test
+    public void whenUnParkVehicle_ShouldReturnTrue() {
+        try{
+            parkingLotSystem.parkVehicle(vehicle, DriverType.NORMAL);
+            parkingLotSystem.parkVehicle(vehicle1, DriverType.NORMAL);
+            Boolean isUnpark = parkingLotSystem.unParkVehicle(vehicle);
+            Boolean isUnpark1 = parkingLotSystem.unParkVehicle(vehicle1);
+            Assert.assertTrue(isUnpark && isUnpark1);
+        } catch(ParkingLotException e){}
+    }
+
+    @Test
+    public void unParkVehicle_IfNoVehiclePresent_ShouldThrowException() {
+        try{
+            parkingLotSystem.unParkVehicle(vehicle);
+        } catch (ParkingLotException e){ Assert.assertEquals(ParkingLotException.ExceptionType.NOT_PRESENT, e.type); }
+    }
+
+    @Test
+    public void unParkVehicle_VehicleIsNotPresent_ShouldThrowException() {
+        try {
+            parkingLotSystem.parkVehicle(vehicle, DriverType.NORMAL);
+            parkingLotSystem.unParkVehicle(vehicle1);
+        } catch (ParkingLotException e) {
+           Assert.assertEquals(ParkingLotException.ExceptionType.NOT_PRESENT, e.type);
+        }
+    }
+
+    @Test
+    public void parkVehicle_EvenlyDistributed_ShouldReturnTrue() {
+        try{
+            parkingLotSystem.parkVehicle(vehicle, DriverType.NORMAL);
+            parkingLotSystem.parkVehicle(vehicle1, DriverType.NORMAL);
+            parkingLotSystem.parkVehicle(vehicle2, DriverType.NORMAL);
+            parkingLotSystem.parkVehicle(vehicle3, DriverType.NORMAL);
+            parkingLotSystem.parkVehicle(vehicle4, DriverType.NORMAL);
+            parkingLotSystem.parkVehicle(vehicle5, DriverType.NORMAL);
+            Boolean checkEvenlyDistributed = parkingLotSystem.isEvenlyDistributed();
+            Assert.assertTrue(checkEvenlyDistributed);
+        } catch(ParkingLotException e) { }
+    }
+
+    @Test
+    public void parkVehicleAfterRemovalAVehicle_EvenlyDistributed_ShouldReturnTrue() {
+        try{
+            parkingLotSystem.parkVehicle(vehicle, DriverType.NORMAL);
+            parkingLotSystem.parkVehicle(vehicle1, DriverType.NORMAL);
+            parkingLotSystem.parkVehicle(vehicle2, DriverType.NORMAL);
+            parkingLotSystem.unParkVehicle(vehicle1);
+            parkingLotSystem.parkVehicle(vehicle3, DriverType.NORMAL);
+            Boolean checkEvenlyDistributed = parkingLotSystem.isEvenlyDistributed();
+            Assert.assertTrue(checkEvenlyDistributed);
+        } catch(ParkingLotException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void unparkVehicle_IfParkingLotSystemIsEmpty_ShouldReturnException() {
+        try{
+            parkingLotSystem.unParkVehicle(vehicle);
+        }catch (ParkingLotException e){
+            Assert.assertEquals(ParkingLotException.ExceptionType.NOT_PRESENT, e.type);
+        }
     }
 
 }
