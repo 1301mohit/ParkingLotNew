@@ -12,25 +12,25 @@ public class ParkingLotSystemTest {
     ParkingLotSystem parkingLotSystem;
     int capacity = 3;
     List<Integer> listOfCapacityOfParkingLots;
-    Object vehicle;
-    Object vehicle1;
-    Object vehicle2;
-    Object vehicle3;
-    Object vehicle4;
-    Object vehicle5;
-    Object vehicle6;
-    Object vehicle7;
+    Vehicle vehicle;
+    Vehicle vehicle1;
+    Vehicle vehicle2;
+    Vehicle vehicle3;
+    Vehicle vehicle4;
+    Vehicle vehicle5;
+    Vehicle vehicle6;
+    Vehicle vehicle7;
 
     @Before
     public void setUp() {
-        vehicle = new Object();
-        vehicle1 = new Object();
-        vehicle2 = new Object();
-        vehicle3 = new Object();
-        vehicle4 = new Object();
-        vehicle5 = new Object();
-        vehicle6 = new Object();
-        vehicle7 = new Object();
+        vehicle = new Vehicle();
+        vehicle1 = new Vehicle();
+        vehicle2 = new Vehicle();
+        vehicle3 = new Vehicle();
+        vehicle4 = new Vehicle();
+        vehicle5 = new Vehicle();
+        vehicle6 = new Vehicle(Vehicle.VehicleType.Large);
+        vehicle7 = new Vehicle(Vehicle.VehicleType.Large);
         listOfCapacityOfParkingLots = new ArrayList<>();
         listOfCapacityOfParkingLots.add(2);
         listOfCapacityOfParkingLots.add(3);
@@ -107,6 +107,15 @@ public class ParkingLotSystemTest {
     }
 
     @Test
+    public void unparkVehicle_IfParkingLotSystemIsEmpty_ShouldReturnException() {
+        try{
+            parkingLotSystem.unParkVehicle(vehicle);
+        }catch (ParkingLotException e){
+            Assert.assertEquals(ParkingLotException.ExceptionType.NOT_PRESENT, e.type);
+        }
+    }
+
+    @Test
     public void unParkVehicle_VehicleIsNotPresent_ShouldThrowException() {
         try {
             parkingLotSystem.parkVehicle(vehicle, DriverType.NORMAL);
@@ -146,11 +155,11 @@ public class ParkingLotSystemTest {
     }
 
     @Test
-    public void unparkVehicle_IfParkingLotSystemIsEmpty_ShouldReturnException() {
+    public void parkLargeVehicle_IsParkedAt_LotWithMaximumSlot() {
         try{
-            parkingLotSystem.unParkVehicle(vehicle);
-        }catch (ParkingLotException e){
-            Assert.assertEquals(ParkingLotException.ExceptionType.NOT_PRESENT, e.type);
+            parkingLotSystem.parkVehicle(vehicle6, DriverType.NORMAL);
+            Assert.assertEquals(parkingLotSystem.listOfParkingLots.get(1).vehicleMap.get(1).getVehicle(), vehicle6);
+        }catch(ParkingLotException e){
         }
     }
 
