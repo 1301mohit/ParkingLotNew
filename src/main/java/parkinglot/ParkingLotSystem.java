@@ -9,10 +9,9 @@ public class ParkingLotSystem {
     List<ParkingLot> listOfParkingLots = new ArrayList<>();
     ParkingLotStrategy strategy;
 
-    public ParkingLotSystem(int capacity, List<Integer> listOfParkingLotCapacity){
+    public ParkingLotSystem(int capacity, List<ParkingLot> listOfParkingLots){
         this.capacity = capacity;
-        for(int i=0; i<this.capacity; i++)
-            listOfParkingLots.add(new ParkingLot(listOfParkingLotCapacity.get(i)));
+        this.listOfParkingLots.addAll(listOfParkingLots);
     }
 
     public Integer getNumberOfParkingLots() {
@@ -42,6 +41,18 @@ public class ParkingLotSystem {
                 return false;
         }
         return true;
+    }
+
+    public Boolean parkVehicle(Vehicle vehicle) throws ParkingLotException {
+        return parkVehicle(vehicle,DriverType.NORMAL);
+    }
+
+    public List<List<Integer>> getListofColoredVechicles(Vehicle.ColorType color) {
+        List<List<Integer>> list_position = new ArrayList<>();
+        for(int index=0; index < listOfParkingLots.size();index++){
+            list_position.add(listOfParkingLots.get(index).getListofColoredVechicles(color));
+        }
+        return list_position;
     }
 
 }

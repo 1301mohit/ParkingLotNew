@@ -12,8 +12,8 @@ public class ParkingSlot {
         this.dateAndTime = null;
     }
 
-    public Object getVehicle() {
-        return vehicle;
+    public Vehicle getVehicle() {
+        return (Vehicle)vehicle;
     }
 
     public void setVehicle(Object vehicle) {

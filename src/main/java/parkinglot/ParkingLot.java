@@ -1,6 +1,7 @@
 package parkinglot;
 
 import java.util.*;
+import java.util.List;
 import java.util.stream.IntStream;
 
 public class ParkingLot {
@@ -79,4 +80,16 @@ public class ParkingLot {
         }
     }
 
+    public List<Integer> getListofColoredVechicles(Vehicle.ColorType color) {
+        List<Integer> listOfSpecifiedColorVehicles=new ArrayList<>();
+        Vehicle vehicle;
+        for (Integer key : vehicleMap.keySet()
+             ) {
+            vehicle = vehicleMap.get(key).getVehicle();
+            if(vehicle!=null && vehicle.getColor() == color ){
+                listOfSpecifiedColorVehicles.add(key);
+            }
+        }
+        return listOfSpecifiedColorVehicles;
+    }
 }
