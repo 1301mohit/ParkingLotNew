@@ -11,9 +11,9 @@ import java.util.List;
 public class ParkingLotTest {
 
     ParkingLot parkingLot;
-    Object vehicle;
-    Object vehicle1;
-    Object vehicle2;
+    Vehicle vehicle;
+    Vehicle vehicle1;
+    Vehicle vehicle2;
     List<ParkingLotInformation> listOfObserver;
 
     @Before
@@ -22,9 +22,9 @@ public class ParkingLotTest {
         listOfObserver.add(new ParkingLotOwner());
         listOfObserver.add(new AirportSecurity());
         parkingLot = new ParkingLot(2);
-        vehicle = new Object();
-        vehicle1 = new Object();
-        vehicle2 = new Object();
+        vehicle = new Vehicle();
+        vehicle1 = new Vehicle();
+        vehicle2 = new Vehicle();
         parkingLot.generateOwner(listOfObserver);
         parkingLot.getListOfUnoccupiedPosition();
     }
