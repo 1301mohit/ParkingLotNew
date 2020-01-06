@@ -1,9 +1,10 @@
 package parkinglot;
 
+import com.predicates.SlotPredicates;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.IntStream;
+import java.util.stream.Collectors;
 
 public class ParkingLotSystem {
 
@@ -53,20 +54,41 @@ public class ParkingLotSystem {
         return parkVehicle(vehicle,DriverType.NORMAL, parkingAttendant);
     }
 
-    public List<List<ParkingSlot>> getListOfParticularColoredAndTypeOfVehicle(Optional<Vehicle.ColorType> color, Optional<String> vehicleName) {
-        List<List<ParkingSlot>> listPosition = new ArrayList<>();
-        for(int index = 0; index < listOfParkingLots.size(); index++){
-            listPosition.add(listOfParkingLots.get(index).getListOfColoredAndTypeVehicles(color, vehicleName));
+    public List<List<Integer>> getListofColoredVechicles(Vehicle.ColorType color) {
+        List<List<Integer>> list_position = new ArrayList<>();
+        for (int index = 0; index < listOfParkingLots.size(); index++) {
+            list_position.add(SlotPredicates.findColorCar(color,
+                    listOfParkingLots.get(index).vehicleMap.values().stream().collect(Collectors.toList())));
         }
-        return listPosition;
+        return list_position;
     }
 
-    public List<List<ParkingSlot>> getListOfVehicleParkInLast30Min(long time) {
-        List<List<ParkingSlot>> listPosition = new ArrayList<>();
-        listOfParkingLots.stream()
-                        .forEach(parkingLot -> IntStream.range(0, listOfParkingLots.size())
-                        .forEach(i -> listPosition.add(listOfParkingLots.get(i).getListOfVehicleParkInLast30Min(time))));
-        return listPosition;
+    public List<List<ParkingSlot>> getListofSlots(String carname, Vehicle.ColorType color) {
+        List<List<ParkingSlot>> parkingSlots = new ArrayList<>();
+        for (int index = 0; index < listOfParkingLots.size(); index++) {
+             parkingSlots.add(SlotPredicates.giveListofSlotWhenGivenColorAndName(carname, color,
+                    listOfParkingLots.get(index).vehicleMap.values().stream().collect(Collectors.toList())));
+        }
+        return parkingSlots;
+    }
+    
+
+    public List<List<Integer>> getListofCarWithName(String carname) {
+        List<List<Integer>> list_position = new ArrayList<>();
+        for (int index = 0; index < listOfParkingLots.size(); index++) {
+            list_position.add(SlotPredicates.findCarByName(carname,
+                    listOfParkingLots.get(index).vehicleMap.values().stream().collect(Collectors.toList())));
+        }
+        return list_position;
+    }
+
+    public List<List<Integer>> getListofCarWithTime(long time) {
+        List<List<Integer>> list_position = new ArrayList<>();
+        for (int index = 0; index < listOfParkingLots.size(); index++) {
+            list_position.add(SlotPredicates.findListOfPositionByTime(time,
+                    listOfParkingLots.get(index).vehicleMap.values().stream().collect(Collectors.toList())));
+        }
+        return list_position;
     }
 
 }

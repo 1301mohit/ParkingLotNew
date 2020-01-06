@@ -86,38 +86,4 @@ public class ParkingLot {
         }
     }
 
-    public List<ParkingSlot> getListOfColoredAndTypeVehicles(Optional<Vehicle.ColorType> color, Optional<String> vehicleName) {
-        List<ParkingSlot> listOfSpecifiedColoredAndTypeVehicles = new ArrayList<>();
-        Vehicle vehicle;
-        for (Integer key : vehicleMap.keySet()
-             ) {
-            vehicle = vehicleMap.get(key).getVehicle();
-            if(vehicle != null && color.isPresent() && vehicleName.isPresent() && vehicle.getVehicleName().equals(vehicleName.get()) && vehicle.getColor().equals(color.get()))
-                listOfSpecifiedColoredAndTypeVehicles.add(vehicleMap.get(key));
-            else if(vehicle != null && color.isPresent() && !vehicleName.isPresent() && vehicle.getColor().equals(color.get()))
-                listOfSpecifiedColoredAndTypeVehicles.add(vehicleMap.get(key));
-            else if(vehicle != null && !color.isPresent() && vehicleName.isPresent() && vehicle.getVehicleName().equals(vehicleName.get()))
-                listOfSpecifiedColoredAndTypeVehicles.add(vehicleMap.get(key));
-        }
-        return listOfSpecifiedColoredAndTypeVehicles;
-    }
-
-    public List<ParkingSlot> getListOfVehicleParkInLast30Min(long time) {
-        Date date = new Date();
-        long resultantTime = 0;
-        time = time * 6000;
-        List<ParkingSlot> listOfVehicleWhichParkWithIn30Min = new ArrayList<>();
-        ParkingSlot slot;
-        for (Integer key : vehicleMap.keySet()
-        ) {
-            slot = vehicleMap.get(key);
-            if(slot.getDateAndTime() != null ){
-                resultantTime = date.getTime() - slot.getDateAndTime().getTime();
-                if( resultantTime <= time)
-                    listOfVehicleWhichParkWithIn30Min.add(vehicleMap.get(key));
-            }
-        }
-        return listOfVehicleWhichParkWithIn30Min;
-    }
-
 }
