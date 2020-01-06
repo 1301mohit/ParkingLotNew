@@ -4,7 +4,7 @@ import java.util.List;
 
 public class StrategyForNormal extends ParkingLotStrategy{
 
-    public Boolean parkVehicle(Vehicle vehicle, DriverType typeOfDriver, List<ParkingLot> listOfParkingLots) throws ParkingLotException {
+    public Boolean parkVehicle(Vehicle vehicle, DriverType typeOfDriver, List<ParkingLot> listOfParkingLots, String attendant) throws ParkingLotException {
         try{
             List<Integer> listOfSizeOfOccupiedVehicleParkingLot = super.getListOfSizeOfOccupiedVehicleParkingLot(listOfParkingLots);
             Integer minimumValue = listOfSizeOfOccupiedVehicleParkingLot.get(0);
@@ -20,7 +20,7 @@ public class StrategyForNormal extends ParkingLotStrategy{
                 index++;
                 listOfUnoccupiedVehiclePosition = listOfParkingLots.get(index).getListOfUnoccupiedPosition();
             }
-            return listOfParkingLots.get(index).parkVehicle(vehicle,listOfUnoccupiedVehiclePosition.get(0));
+            return listOfParkingLots.get(index).parkVehicle(vehicle,listOfUnoccupiedVehiclePosition.get(0), attendant);
         }catch(IndexOutOfBoundsException e){
             throw new ParkingLotException("ParkingLotSystem is full", ParkingLotException.ExceptionType.FULL);
         }

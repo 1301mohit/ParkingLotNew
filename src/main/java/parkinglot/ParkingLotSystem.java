@@ -2,6 +2,8 @@ package parkinglot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.IntStream;
 
 public class ParkingLotSystem {
 
@@ -18,12 +20,12 @@ public class ParkingLotSystem {
         return this.listOfParkingLots.size();
     }
 
-    public Boolean parkVehicle(Vehicle vehicle, DriverType typeOfDriver) throws ParkingLotException {
+    public Boolean parkVehicle(Vehicle vehicle, DriverType typeOfDriver, String attendant) throws ParkingLotException {
         strategy = FactoryForStrategy.getStrategyObject(typeOfDriver, vehicle.vehicleType);
-        return strategy.parkVehicle(vehicle, typeOfDriver, this.listOfParkingLots);
+        return strategy.parkVehicle(vehicle, typeOfDriver, this.listOfParkingLots, attendant);
     }
 
-    public Boolean unParkVehicle(Object vehicle) throws ParkingLotException {
+    public Boolean unParkVehicle(Vehicle vehicle) throws ParkingLotException {
         for(int i=0; i<this.capacity; i++){
             Boolean check = listOfParkingLots.get(i).unParkVehicle(vehicle);
             if(check)
@@ -36,23 +38,35 @@ public class ParkingLotSystem {
         List<Integer> listOfCount_Cars = new ArrayList<>();
         listOfCount_Cars.addAll(strategy.getListOfSizeOfOccupiedVehicleParkingLot(listOfParkingLots));
         Integer value = listOfCount_Cars.get(0);
-        for(int i=1; i<listOfCount_Cars.size(); i++){
-            if(value != listOfCount_Cars.get(i))
-                return false;
-        }
-        return true;
+        return listOfCount_Cars.stream().filter(integer -> integer == value).findAny().isPresent();
     }
 
     public Boolean parkVehicle(Vehicle vehicle) throws ParkingLotException {
-        return parkVehicle(vehicle,DriverType.NORMAL);
+        return parkVehicle(vehicle, DriverType.NORMAL, "PQR");
     }
 
-    public List<List<Integer>> getListofColoredVechicles(Vehicle.ColorType color) {
-        List<List<Integer>> list_position = new ArrayList<>();
-        for(int index=0; index < listOfParkingLots.size();index++){
-            list_position.add(listOfParkingLots.get(index).getListofColoredVechicles(color));
+    public Boolean parkVehicle(Vehicle vehicle, DriverType type) throws ParkingLotException {
+        return parkVehicle(vehicle, type, "PQR");
+    }
+
+    public Boolean parkVehicle(Vehicle vehicle, String parkingAttendant) throws ParkingLotException {
+        return parkVehicle(vehicle,DriverType.NORMAL, parkingAttendant);
+    }
+
+    public List<List<ParkingSlot>> getListOfParticularColoredAndTypeOfVehicle(Optional<Vehicle.ColorType> color, Optional<String> vehicleName) {
+        List<List<ParkingSlot>> listPosition = new ArrayList<>();
+        for(int index = 0; index < listOfParkingLots.size(); index++){
+            listPosition.add(listOfParkingLots.get(index).getListOfColoredAndTypeVehicles(color, vehicleName));
         }
-        return list_position;
+        return listPosition;
+    }
+
+    public List<List<ParkingSlot>> getListOfVehicleParkInLast30Min(long time) {
+        List<List<ParkingSlot>> listPosition = new ArrayList<>();
+        listOfParkingLots.stream()
+                        .forEach(parkingLot -> IntStream.range(0, listOfParkingLots.size())
+                        .forEach(i -> listPosition.add(listOfParkingLots.get(i).getListOfVehicleParkInLast30Min(time))));
+        return listPosition;
     }
 
 }

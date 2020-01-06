@@ -5,7 +5,7 @@ import java.util.List;
 
 public abstract class ParkingLotStrategy {
 
-    public abstract Boolean parkVehicle(Vehicle vehicle, DriverType typeOfDriver, List<ParkingLot> listOfParkingLots) throws ParkingLotException;
+    public abstract Boolean parkVehicle(Vehicle vehicle, DriverType typeOfDriver, List<ParkingLot> listOfParkingLots, String attendant) throws ParkingLotException;
 
     public List<Integer> getListOfSizeOfOccupiedVehicleParkingLot(List<ParkingLot> listOfParkingLots) {
         List<Integer> listOfSizeOfOccupiedVehicleParkingLot = new ArrayList<>();

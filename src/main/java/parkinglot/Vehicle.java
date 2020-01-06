@@ -2,17 +2,18 @@ package parkinglot;
 
 public class Vehicle {
 
-    enum VehicleType{
-        Large, Normal;
+    public enum VehicleType{
+        LARGE, NORMAL;
     }
 
-    enum ColorType{
-        WHITE, BLACK;
+    public enum ColorType{
+        WHITE, BLACK, BLUE;
     }
 
+    public String plateNumber;
     public ColorType colorType;
-
     public VehicleType vehicleType;
+    public String vehicleName;
 
     public Vehicle(VehicleType vehicleType) {
         this.vehicleType = vehicleType;
@@ -20,17 +21,32 @@ public class Vehicle {
     }
 
     public Vehicle(){
-        this.vehicleType = VehicleType.Normal;
+        this.vehicleType = VehicleType.NORMAL;
         this.colorType = ColorType.BLACK;
     }
 
-    public Vehicle(ColorType colorType, VehicleType vehicleType) {
-        this.colorType = colorType;
+    public Vehicle(ColorType color, VehicleType vehicleType) {
+        this.colorType = color;
         this.vehicleType = vehicleType;
+    }
+
+    public Vehicle(String plateNumber, ColorType color, VehicleType vehicleType, String vehicleName) {
+        this.plateNumber = plateNumber;
+        this.colorType = color;
+        this.vehicleType = vehicleType;
+        this.vehicleName = vehicleName;
     }
 
     public ColorType getColor() {
         return this.colorType;
+    }
+
+    public String getPlateNumber() {
+        return plateNumber;
+    }
+
+    public String getVehicleName() {
+        return vehicleName;
     }
 
 }
