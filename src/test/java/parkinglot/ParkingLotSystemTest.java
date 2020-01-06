@@ -161,14 +161,14 @@ public class ParkingLotSystemTest {
     }
 
     @Test
-    public void park3Vehicles_GetLocationOf_WhiteVehicles() {
+    public void park3Vehicles_GetLocationListOf_WhiteVehicles() {
         try{
             parkingLotSystem.parkVehicle(vehicle5);
             parkingLotSystem.parkVehicle(vehicle7);
             parkingLotSystem.parkVehicle(vehicle6);
-            List<List<ParkingSlot>> listofColoredVechicles = parkingLotSystem.getListOfParticularColoredAndTypeOfVehicle(Optional.of(Vehicle.ColorType.WHITE), Optional.empty());
-            Assert.assertEquals(listofColoredVechicles.get(0).get(0).getVehicle(), vehicle5);
-            Assert.assertEquals(listofColoredVechicles.get(2).get(0).getVehicle(), vehicle6);
+            List<List<Integer>> listofColoredVechicles = parkingLotSystem.getListofColoredVechicles(Vehicle.ColorType.WHITE);
+            Assert.assertEquals((Integer) 1,listofColoredVechicles.get(0).get(0));
+            Assert.assertEquals((Integer) 1,listofColoredVechicles.get(2).get(0));
         }catch(ParkingLotException e){ e.printStackTrace(); }
     }
 
@@ -178,7 +178,7 @@ public class ParkingLotSystemTest {
             parkingLotSystem.parkVehicle(vehicle7, "ABC");
             parkingLotSystem.parkVehicle(vehicle6);
             parkingLotSystem.parkVehicle(vehicle8, "ABD");
-            List<List<ParkingSlot>> listOfSpecifiedColoredAndType = parkingLotSystem.getListOfParticularColoredAndTypeOfVehicle(Optional.of(Vehicle.ColorType.BLUE), Optional.of("Toyota"));
+            List<List<ParkingSlot>> listOfSpecifiedColoredAndType = parkingLotSystem.getListofSlots("Toyota",Vehicle.ColorType.BLUE);
             Assert.assertEquals("12345", listOfSpecifiedColoredAndType.get(0).get(0).getVehicle().getPlateNumber());
             Assert.assertEquals("ABC", listOfSpecifiedColoredAndType.get(0).get(0).getParkingAttendantName());
             Assert.assertEquals(1, (int)listOfSpecifiedColoredAndType.get(0).get(0).getPosition());
@@ -191,29 +191,29 @@ public class ParkingLotSystemTest {
     }
 
     @Test
-    public void park3Vehicles_GetLocationOf_BMWVehicles() {
+    public void park3Vehicles_GetLocationListOf_BMWVehicles() {
         try{
             parkingLotSystem.parkVehicle(vehicle1);
             parkingLotSystem.parkVehicle(vehicle5);
             parkingLotSystem.parkVehicle(vehicle2);
-            List<List<ParkingSlot>> listofVechiclesAccordingToHerName = parkingLotSystem.getListOfParticularColoredAndTypeOfVehicle(Optional.empty(), Optional.of("BMW"));
-            Assert.assertEquals(listofVechiclesAccordingToHerName.get(0).get(0).getVehicle(), vehicle1);
-            Assert.assertEquals(listofVechiclesAccordingToHerName.get(2).get(0).getVehicle(), vehicle2);
+            List<List<Integer>> listofVechiclesAccordingToHerName = parkingLotSystem.getListofCarWithName("BMW");
+            Assert.assertEquals((Integer)1,listofVechiclesAccordingToHerName.get(0).get(0));
+            Assert.assertEquals((Integer)1,listofVechiclesAccordingToHerName.get(2).get(0));
         }catch(ParkingLotException e){
             e.printStackTrace();
         }
     }
 
     @Test
-    public void park3Vehicles_GetLocationOfVehicles_ParkLessThan30Minutes() {
+    public void park3Vehicles_GetLocationListOf_VehiclesParkedLessThan30Min() {
         try{
-            parkingLotSystem.parkVehicle(vehicle4);
+            parkingLotSystem.parkVehicle(vehicle1);
             parkingLotSystem.parkVehicle(vehicle5);
-            parkingLotSystem.parkVehicle(vehicle6);
-            List<List<ParkingSlot>> listofVechiclesAccordingToHerName = parkingLotSystem.getListOfVehicleParkInLast30Min(30);
-            Assert.assertEquals(listofVechiclesAccordingToHerName.get(0).get(0).getVehicle(), vehicle4);
-            Assert.assertEquals(listofVechiclesAccordingToHerName.get(1).get(0).getVehicle(), vehicle5);
-            Assert.assertEquals(listofVechiclesAccordingToHerName.get(2).get(0).getVehicle(), vehicle6);
+            parkingLotSystem.parkVehicle(vehicle2);
+            List<List<Integer>> listofVechiclesParkedLessThan30Min = parkingLotSystem.getListofCarWithTime(30);
+            Assert.assertEquals((Integer)1, listofVechiclesParkedLessThan30Min.get(0).get(0));
+            Assert.assertEquals((Integer)1, listofVechiclesParkedLessThan30Min.get(1).get(0));
+            Assert.assertEquals((Integer)1, listofVechiclesParkedLessThan30Min.get(2).get(0));
         }catch(ParkingLotException e){
             e.printStackTrace();
         }

@@ -122,14 +122,5 @@ public class ParkingLotTest {
         }
     }
 
-    @Test
-    public void test() {
-        try{
-            parkingLot.parkVehicle(vehicle1, 1);
-            parkingLot.getListOfColoredAndTypeVehicles(Optional.of(Vehicle.ColorType.BLUE), Optional.empty());
-        } catch (ParkingLotException e) {
-            e.printStackTrace();
-        }
-    }
 }
 
